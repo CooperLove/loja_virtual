@@ -24,6 +24,7 @@ class DiscountCard extends StatelessWidget {
               decoration: InputDecoration(
                   border: OutlineInputBorder(), hintText: "Digite seu cupom"),
               onFieldSubmitted: (text) {
+                if (text.isEmpty) return;
                 FirebaseFirestore.instance
                     .collection("coupons")
                     .doc(text)

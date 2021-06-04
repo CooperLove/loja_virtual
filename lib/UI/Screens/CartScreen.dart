@@ -3,6 +3,7 @@ import 'package:loja_virtual/Model/CartModel.dart';
 import 'package:loja_virtual/Model/UserModel.dart';
 import 'package:loja_virtual/UI/Screens/LoginScreen.dart';
 import 'package:loja_virtual/UI/Tiles/CartTile.dart';
+import 'package:loja_virtual/UI/Widgets/CartPrice.dart';
 import 'package:loja_virtual/UI/Widgets/CustomDrawer.dart';
 import 'package:loja_virtual/UI/Widgets/DiscountCard.dart';
 import 'package:loja_virtual/UI/Widgets/ShippingCard.dart';
@@ -94,7 +95,12 @@ class _CartScreenState extends State<CartScreen> {
                   return CartTile(e);
                 }).toList()),
                 DiscountCard(),
-                ShippingCard()
+                ShippingCard(),
+                CartPrice(() async {
+                  String orderId = await model.finishOrder();
+                  if (orderId != null)
+                    print("Pedido $orderId realizado com sucesso!");
+                })
               ],
             );
           }

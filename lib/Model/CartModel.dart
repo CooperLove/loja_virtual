@@ -88,4 +88,67 @@ class Cart extends Model {
     this._couponCode = couponCode;
     this._discountPercentage = discountPercentage;
   }
+
+  double getProductsPrice() {
+    double price = 0.0;
+    for (CartProduct c in products) {
+      if (c.productData != null) price += c.quantity * c.productData.price;
+    }
+
+    return price;
+  }
+
+  double getDiscountPrice() {
+    return getProductsPrice() * this._discountPercentage / 100;
+  }
+
+  double getShippingPrice() => 9.99;
+
+  void updatePrices() => notifyListeners();
+
+  Future<String> finishOrder() async {
+    if (products.length == 0) return null;
+
+    double price = getProductsPrice();
+    double discount = getDiscountPrice();
+    double shipping = getShippingPrice();
+
+    DocumentReference orderRef =
+        await FirebaseFirestore.instance.collection("orders").add({
+      "clientId": 0,
+      "products": products.map((cartProduct) => cartProduct.toMap()).toList(),
+      "productsPrice": price,
+      "discountPrice": discount,
+      "shippingPrice": shipping,
+      "totalPrice": price - discount + shipping,
+      "status": 1
+    });
+
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc(userModel.user.uid)
+        .collection("orders")
+        .doc(orderRef.id)
+        .set({"orderId": orderRef.id});
+
+    QuerySnapshot query = await FirebaseFirestore.instance
+        .collection("users")
+        .doc(userModel.user.uid)
+        .collection("cart")
+        .get();
+
+    for (DocumentSnapshot doc in query.docs) {
+      doc.reference.delete();
+    }
+
+    products.clear();
+
+    this._couponCode = null;
+    this._discountPercentage = 0;
+
+    isLoading = false;
+    notifyListeners();
+
+    return orderRef.id;
+  }
 }
