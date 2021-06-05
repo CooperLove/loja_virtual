@@ -11,6 +11,15 @@ class CartProduct {
 
   CartProduct();
 
+  CartProduct.fromMap(Map productMap) {
+    // cid = productMap.id;
+    category = productMap["category"];
+    pid = productMap["pid"];
+    quantity = productMap["quantity"];
+    size = productMap["size"];
+    productData = ProductModel.fromMap(productMap["product"]);
+  }
+
   CartProduct.fromDocument(DocumentSnapshot document) {
     cid = document.id;
     category = document["category"];

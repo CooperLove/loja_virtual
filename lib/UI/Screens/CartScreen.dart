@@ -9,6 +9,8 @@ import 'package:loja_virtual/UI/Widgets/DiscountCard.dart';
 import 'package:loja_virtual/UI/Widgets/ShippingCard.dart';
 import 'package:scoped_model/scoped_model.dart';
 
+import 'OrderScreen.dart';
+
 class CartScreen extends StatefulWidget {
   // final _pageController;
   // CartScreen(this._pageController);
@@ -98,8 +100,11 @@ class _CartScreenState extends State<CartScreen> {
                 ShippingCard(),
                 CartPrice(() async {
                   String orderId = await model.finishOrder();
-                  if (orderId != null)
+                  if (orderId != null) {
                     print("Pedido $orderId realizado com sucesso!");
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (context) => OrderScreen(orderId)));
+                  }
                 })
               ],
             );

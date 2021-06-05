@@ -5,7 +5,7 @@ import 'package:loja_virtual/Model/CartProductModel.dart';
 import 'package:loja_virtual/Model/ProductModel.dart';
 
 class CartTile extends StatelessWidget {
-  CartProduct product;
+  final CartProduct product;
   CartTile(this.product);
 
   Widget _buildContent(BuildContext context) {

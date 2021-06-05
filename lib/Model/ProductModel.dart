@@ -9,6 +9,12 @@ class ProductModel {
   List sizes;
   List images;
 
+  ProductModel.fromMap(Map mapModel) {
+    title = mapModel["title"];
+    description = mapModel["description"];
+    price = mapModel["price"];
+  }
+
   ProductModel.fromDocument(DocumentSnapshot snapshot) {
     id = snapshot.id;
     // category = ;
